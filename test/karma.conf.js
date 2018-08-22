@@ -20,7 +20,8 @@ module.exports = function (config) {
 
     // list of files / patterns to exclude
     exclude: [
-      'src/type/common.d.ts'
+      'src/type/common.d.ts',
+      'node_modules'
     ],
 
     // preprocess matching files before serving them to the browser
@@ -29,7 +30,11 @@ module.exports = function (config) {
       'test/src/**/*.ts': ['webpack'],
       'src/index.ts': ['webpack', 'sourcemap']
     },
+    webpackMiddleware: {
+      stats: 'errors-only'
+    },
     webpack: {
+      mode: 'development',
       resolve: {
         extensions: ['.js', '.ts']
       },
@@ -38,6 +43,7 @@ module.exports = function (config) {
           {
             test: /\.ts$/,
             loader: 'ts-loader',
+            exclude: /node_modules/,
           },
           {
             test: /\.ts$/,
@@ -51,7 +57,9 @@ module.exports = function (config) {
         ]
       },
       node: {
-        fs: 'empty'
+        fs: "empty",
+        net: "empty",
+        tls: "empty"
       }
     },
     mime: {
