@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "module": "es6",
+      "noImplicitAny": false,
+      "sourceMap": true,
+      "target": "es5",
+      "allowJs": true,
+    },
+    "exclude": [
+      "./node_modules",
+      "./webpack.*.js",
+      "./dist/*.js",
+      "./test/**/*",
+      "./docs/**/*"
+    ]
+  }
