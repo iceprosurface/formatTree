@@ -14,17 +14,20 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/src/**/*.ts'
+      'test/src/**/*.ts',
+      'src/index.ts'
     ],
 
     // list of files / patterns to exclude
-    exclude: [],
-
+    exclude: [
+      'src/type/common.d.ts'
+    ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/src/**/*.ts': ['webpack']
+      'test/src/**/*.ts': ['webpack'],
+      'src/index.ts': ['webpack', 'sourcemap']
     },
     webpack: {
       resolve: {
@@ -34,7 +37,16 @@ module.exports = function (config) {
         rules: [
           {
             test: /\.ts$/,
-            loader: 'ts-loader'
+            loader: 'ts-loader',
+          },
+          {
+            test: /\.ts$/,
+            exclude: /(node_modules|bower_components|test)/,
+            loader: 'istanbul-instrumenter-loader',
+            enforce: 'post',
+            query: {
+              esModules: true
+            }
           }
         ]
       },
@@ -43,14 +55,37 @@ module.exports = function (config) {
       }
     },
     mime: {
-      'text/x-typescript': ['ts','tsx']
+      'text/x-typescript': ['ts', 'tsx']
     },
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
-
-
+    // reporters: ['progress'],
+    reporters: ['spec', 'coverage'],
+    coverageReporter: {
+      dir: './coverage',
+      reporters: [
+        {
+          type: 'lcov',
+          subdir: '.'
+        },
+        { type: 'text-summary' },
+        {
+          type: 'cobertura',
+          subdir: '.',
+        }
+      ]
+    },
+    plugins: [
+      'karma-mocha',
+      'karma-coverage',
+      'karma-spec-reporter',
+      'karma-phantomjs-launcher',
+      'karma-webpack',
+      'karma-sourcemap-loader',
+      'webpack',
+      'karma-chai'
+    ],
     // web server port
     port: 9876,
 
@@ -70,8 +105,8 @@ module.exports = function (config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
-    // browsers: ['PhantomJS', 'Chrome'],
+    // browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
 
     // Continuous Integration mode
@@ -81,5 +116,8 @@ module.exports = function (config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity,
+    // plugins: [
+    //   'karma-coverage'
+    // ]
   })
 }
